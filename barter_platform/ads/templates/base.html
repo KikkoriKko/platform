@@ -1,0 +1,25 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Платформа для обмена вещами</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'ad_list' %}">Объявления</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_ad' %}">Создать объявление</a>
+                <a href="{% url 'logout' %}">Выйти</a>  <!-- Кнопка выхода -->
+            {% else %}
+                <a href="{% url 'login' %}">Войти</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
