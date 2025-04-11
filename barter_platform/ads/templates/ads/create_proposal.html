@@ -5,29 +5,20 @@
     <h2 class="text-center mb-4">Обмен на: {{ ad_receiver.title }}</h2>
     <p class="text-center">{{ ad_receiver.description }}</p>
 
-    <form method="post" id="exchange-form" action="{% url 'create_proposal' ad_receiver.id %}">
+    <form method="post" id="exchange-form">
         {% csrf_token %}
         <input type="hidden" name="ad_sender" id="ad_sender_id">
 
         {% if form.non_field_errors %}
-        <div class="alert alert-danger">
-            <ul>
-                {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="alert alert-danger">
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
 
-        {% if form.ad_sender.errors %}
-        <div class="alert alert-danger">
-            <ul>
-                {% for error in form.ad_sender.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
 
         <div class="ad-list">
             {% for ad in ad_senders %}
@@ -66,7 +57,9 @@
                 const card = this.closest('.ad-card');
                 const adId = card.getAttribute('data-ad-id');
 
+                // Удалим выделения с других карточек
                 document.querySelectorAll('.ad-card').forEach(c => c.classList.remove('border-success', 'shadow-lg'));
+                // Выделим текущую
                 card.classList.add('border-success', 'shadow-lg');
 
                 // Установим значение скрытого поля
@@ -79,7 +72,6 @@
     });
 </script>
 {% endblock %}
-
 
 <style>
   .ad-list {

@@ -1,18 +1,20 @@
 from rest_framework import filters, viewsets
 from rest_framework.response import Response
-from .models import Ad, ExchangeProposal, Category
-from .serializers import AdSerializer, ExchangeProposalSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter
+
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from .forms import AdForm, ExchangeProposalForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.core.paginator import Paginator
 from django.db.models import Q
+
+from .forms import AdForm, ExchangeProposalForm
+from .models import Ad, ExchangeProposal, Category
+from .serializers import AdSerializer, ExchangeProposalSerializer
 
 
 class AdViewSet(viewsets.ModelViewSet):
