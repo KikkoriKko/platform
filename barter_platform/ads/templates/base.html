@@ -1,25 +1,213 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Платформа для обмена вещами</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #0056b3;
+        }
+
+        .user-info {
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            display: grid;
+            grid-gap: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"], .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover, .btn:hover {
+            background-color: #218838;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            border: 1px solid #007BFF;
+            background-color: #fff;
+            color: #007BFF;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .pagination a:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+        }
+
+        .ad-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .ad-list li {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .ad-list li:hover {
+            transform: translateY(-5px);
+        }
+
+        .ad-list img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .ad-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"],
+        .form-group textarea,
+        .form-group select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
-            <a href="{% url 'ad_list' %}">Объявления</a>
+            <div class="nav-links">
+                <a href="{% url 'ad_list' %}">Объявления</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create_ad' %}">Создать объявление</a>
+                    <a href="{% url 'proposals_sent' %}">Мои предложения</a>
+                    <a href="{% url 'proposals_received' %}">Предложения мне</a>
+                    <a href="{% url 'logout' %}">Выйти</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Войти</a>
+                    <a href="{% url 'signup' %}">Регистрация</a>
+                {% endif %}
+            </div>
+
             {% if user.is_authenticated %}
-                <a href="{% url 'create_ad' %}">Создать объявление</a>
-                <a href="{% url 'logout' %}">Выйти</a>  <!-- Кнопка выхода -->
-            {% else %}
-                <a href="{% url 'login' %}">Войти</a>
+                <div class="user-info">{{ user.username }}</div>
             {% endif %}
         </nav>
     </header>
     <main>
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
 </body>
 </html>

@@ -1,10 +1,219 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Создать предложение обмена</h2>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Отправить предложение</button>
-  </form>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Обмен на: {{ ad_receiver.title }}</h2>
+    <p class="text-center">{{ ad_receiver.description }}</p>
+
+    <form method="post" id="exchange-form" action="{% url 'create_proposal' ad_receiver.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="ad_sender" id="ad_sender_id">
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if form.ad_sender.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in form.ad_sender.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="ad-list">
+            {% for ad in ad_senders %}
+            <div class="ad-card" data-ad-id="{{ ad.id }}">
+                <p class="ad-user"><strong>Разместил:</strong> {{ ad.user.username }}</p>
+                <h3 class="ad-title">{{ ad.title }}</h3>
+                <p class="ad-description">{{ ad.description }}</p>
+                <p class="ad-created-at"><strong>Размещено:</strong> {{ ad.created_at|date:"d.m.Y H:i" }}</p>
+
+                {% if ad.image %}
+                <img src="{{ ad.image.url }}" alt="Изображение для {{ ad.title }}" class="ad-image">
+                {% else %}
+                <img src="https://via.placeholder.com/150" alt="Изображение для {{ ad.title }}" class="ad-image">
+                {% endif %}
+
+                <div class="ad-actions">
+                    <button type="button" class="btn btn-outline-primary select-ad-btn w-100">
+                        Выбрать это объявление
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-4 d-none" id="submit-block">
+            <button type="submit" class="btn btn-success w-100">Отправить предложение обмена</button>
+            <a href="{% url 'ad_list' %}" class="btn btn-secondary w-100 mt-2">Отмена</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.select-ad-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const card = this.closest('.ad-card');
+                const adId = card.getAttribute('data-ad-id');
+
+                document.querySelectorAll('.ad-card').forEach(c => c.classList.remove('border-success', 'shadow-lg'));
+                card.classList.add('border-success', 'shadow-lg');
+
+                // Установим значение скрытого поля
+                document.getElementById('ad_sender_id').value = adId;
+
+                // Покажем кнопку отправки
+                document.getElementById('submit-block').classList.remove('d-none');
+            });
+        });
+    });
+</script>
 {% endblock %}
+
+
+<style>
+  .ad-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .ad-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+  }
+
+  .ad-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .ad-card .ad-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .ad-card .ad-description {
+    font-size: 14px;
+    color: #555;
+    margin: 10px 0;
+  }
+
+  .ad-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+
+  .ad-actions {
+    margin-top: 15px;
+  }
+
+  .select-ad-btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+
+  .select-ad-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .filter-form {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .filter-container {
+    display: flex;
+    gap: 20px !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+
+  .filter-container label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .filter-container select,
+  .filter-container input {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    width: auto;
+    margin-top: 10px;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  .pagination-link {
+    margin: 0 5px;
+    padding: 10px 20px;
+    border: 1px solid #007BFF;
+    background-color: #fff;
+    color: #007BFF;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .pagination-link:hover {
+    background-color: #007BFF;
+    color: white;
+  }
+
+  .pagination .current {
+    font-weight: bold;
+  }
+
+  .pagination .step-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>

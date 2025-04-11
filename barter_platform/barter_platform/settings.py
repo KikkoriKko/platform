@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -58,12 +58,14 @@ REST_FRAMEWORK = {
 }
 
 LOGIN_URL = 'login'
-
 LOGIN_REDIRECT_URL = 'ad_list'
-
 LOGOUT_REDIRECT_URL = 'ad_list'
-
 ROOT_URLCONF = 'barter_platform.urls'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 TEMPLATES = [
     {
@@ -75,6 +77,10 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.csrf',
+                'django.template.context_processors.static',
+                'django.template.context_processors.media',
+                'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
             ],
         },

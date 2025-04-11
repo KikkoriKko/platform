@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Предложения обмена на ваши объявления</h2>
+
+  {% if proposals %}
+    <ul>
+      {% for proposal in proposals %}
+        <li>
+          <p><strong>Вам предложили:</strong> "{{ proposal.offered_ad.title }}"</p>
+          <p><strong>В обмен на ваше:</strong> "{{ proposal.requested_ad.title }}"</p>
+          <p><strong>Статус:</strong> {{ proposal.status }}</p>
+
+          {% if proposal.status == 'pending' %}
+            <form action="{% url 'respond_proposal' proposal.id 'accepted' %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit">Принять</button>
+            </form>
+            <form action="{% url 'respond_proposal' proposal.id 'rejected' %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit">Отклонить</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Пока нет предложений на ваши объявления.</p>
+  {% endif %}
+{% endblock %}

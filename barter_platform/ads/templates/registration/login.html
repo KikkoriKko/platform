@@ -1,19 +1,137 @@
-<!-- templates/registration/login.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="login-container">
+    <h2>Вход</h2>
+    <form method="post" class="login-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="username">Имя пользователя</label>
+        {{ form.username }}
+        <div class="error-message">
+          {% for field in form.username.errors %}
+            <p>{{ field }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        {{ form.password }}
+        <div class="error-message">
+          {% for field in form.password.errors %}
+            <p>{{ field }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Войти</button>
     </form>
 
-    <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
-</body>
-</html>
+    <div class="signup-link">
+      <p>Нет аккаунта? <a href="{% url 'signup' %}" class="btn btn-secondary">Зарегистрируйтесь</a></p>
+    </div>
+  </div>
+{% endblock %}
+
+<style>
+  .login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: #333;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+    background-color: #fff;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+  }
+
+  .error-message {
+    color: #dc3545;
+    font-size: 0.875em;
+  }
+
+  /* Стиль кнопки "Войти" аналогичный кнопке на странице с объявлениями */
+  .btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Стиль кнопки "Зарегистрироваться" */
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+
+  .signup-link {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .signup-link a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .signup-link a:hover {
+    text-decoration: underline;
+  }
+</style>

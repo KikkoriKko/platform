@@ -1,19 +1,147 @@
-<!-- templates/registration/signup.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-</head>
-<body>
-    <h2>Sign Up</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="registration-container">
+    <h2>Регистрация</h2>
+    <form method="post" class="registration-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="username">Имя пользователя</label>
+        {{ form.username }}
+        <div class="error-message">
+          {% for field in form.username.errors %}
+            <p>{{ field }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password1">Пароль</label>
+        {{ form.password1 }}
+        <div class="error-message">
+          {% for field in form.password1.errors %}
+            <p>{{ field }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password2">Подтвердите пароль</label>
+        {{ form.password2 }}
+        <div class="error-message">
+          {% for field in form.password2.errors %}
+            <p>{{ field }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
     </form>
 
-    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-</body>
-</html>
+    <div class="login-link">
+      <p>Уже есть аккаунт? <a href="{% url 'login' %}" class="btn btn-secondary">Войти</a></p>
+    </div>
+  </div>
+{% endblock %}
+
+<style>
+  .registration-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: #333;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+    background-color: #fff;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+  }
+
+  .error-message {
+    color: #dc3545;
+    font-size: 0.875em;
+  }
+
+  /* Стиль кнопки "Зарегистрироваться" аналогичный кнопке на странице с объявлениями */
+  .btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Стиль кнопки "Войти" */
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .login-link a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+</style>
